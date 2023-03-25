@@ -29,6 +29,9 @@ public class EngineWindow {
     private IntBuffer pWidth;
     private IntBuffer pHeight;
     private GLFWVidMode vidmode;
+//    @Getter
+//    private Keyboard keyboard;
+    private final boolean[] keys = new boolean[GLFW_KEY_LAST];
 
     /**
      * конструктор
@@ -69,12 +72,6 @@ public class EngineWindow {
             throw new RuntimeException("Failed to create the GLFW window");
         }
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-        });
-
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
             //резервируем память для указателей:
@@ -103,6 +100,18 @@ public class EngineWindow {
             glfwSetWindowSizeLimits(window, width, height, 1980, 1200);
         } // the stack frame is popped automatically
 
+        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+            if ( action == GLFW_PRESS ) {
+                keys[key] = true;
+            }
+            if ( key == GLFW_KEY_A && action == GLFW_RELEASE ) {
+                keys[key] = false;
+            }
+            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ) {
+                        glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+            }
+        });
 
 
         // Make the OpenGL context current
@@ -113,6 +122,8 @@ public class EngineWindow {
 
         // Make the window visible
         glfwShowWindow(window);
+
+        Mouse.setMouseCallbacks(window);
     }
 
     /**
@@ -138,5 +149,9 @@ public class EngineWindow {
      */
     public boolean isCloseRequest() {
         return  glfwWindowShouldClose(window);
+    }
+
+    public boolean keyPressed(int key) {
+        return (key < GLFW_KEY_LAST) && keys[key];
     }
 }

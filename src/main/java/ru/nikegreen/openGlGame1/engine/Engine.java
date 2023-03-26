@@ -78,7 +78,7 @@ public class Engine {
     public void update() {
         //позиции вершин (vbo)
         //фигура квадрат только вершины квадрата
-        //треугольники через индексы вершин
+        //треугольники через индексы вершин (ibo_quad)
         float[] vbo_quad = {
                 0.5f, 0.5f, 0.0f,
                 -0.5f, 0.5f, 0.0f,
@@ -86,7 +86,16 @@ public class Engine {
                 0.5f, -0.5f, 0.0f,
         };
 
-        int[] indexes = {
+        //цвета вершин
+        float[] v_colours = {
+                1.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+                1.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 1.0f, 1.0f, 1.0f
+        };
+
+        //индексы рисования квадрата из вершин в vbo_quad
+        int[] ibo_quad = {
                 0, 1, 2,
                 0, 2, 3
         };
@@ -96,19 +105,26 @@ public class Engine {
         int vaoId = glGenVertexArrays(); //openGL 3.3
         glBindVertexArray(vaoId);
 
+        int vboId = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, putData(vbo_quad), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
+
+        int vboIdColours = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, putData(v_colours), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+
+
         //связываем индексы
         //int iboId = glCreateBuffers(); //openGL 4.5
         int iboId = glGenBuffers(); //openGL 3.3
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, putData(indexes), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, putData(ibo_quad), GL_STATIC_DRAW);
 
-        int vboId = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, putData(vbo_quad), GL_STATIC_DRAW);
-
-        //glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
 
         glBindVertexArray(vaoId);
@@ -128,9 +144,11 @@ public class Engine {
             //рисуем в буфере
             glBindVertexArray(vaoId);
             glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
             shader.bind();
-            glDrawElements(GL_TRIANGLES, indexes.length, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, ibo_quad.length, GL_UNSIGNED_INT, 0);
             shader.unBind();
+            glDisableVertexAttribArray(1);
             glDisableVertexAttribArray(0);
             glBindVertexArray(vaoId);
 

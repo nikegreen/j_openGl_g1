@@ -1,16 +1,10 @@
 package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL45C.glCreateBuffers;
+import static org.lwjgl.opengl.GL45C.glCreateVertexArrays;
 import static ru.nikegreen.openGlGame1.util.MemBuffer.*;
 
 /**
@@ -114,26 +108,29 @@ public class Engine {
                 0, 2, 3
         };
 
-        int vaoId = GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(vaoId);
+        //создадим массив вершин
+        //int vaoId = glCreateVertexArrays(); //openGL 4.5
+        int vaoId = glGenVertexArrays(); //openGL 3.3
+        glBindVertexArray(vaoId);
 
         //связываем индексы
-        int iboId = GL30.glGenBuffers();
-        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, iboId);
+        //int iboId = glCreateBuffers(); //openGL 4.5
+        int iboId = glGenBuffers(); //openGL 3.3
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
         //IntBuffer intBuffer = storeDataInIntBuffer(indexes);
-        GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, putData(indexes), GL30.GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, putData(indexes), GL_STATIC_DRAW);
         //MemoryUtil.memFree(intBuffer); //освобождаем память занятую intBuffer
 
-
-        int vboId = GL30.glGenBuffers();
-        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
+        int vboId = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
         //FloatBuffer buffer = storeDataInFloatBuffer(vbo_quad);
-        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, putData(vbo_quad), GL30.GL_STATIC_DRAW);
-        GL30.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+        glBufferData(GL_ARRAY_BUFFER, putData(vbo_quad), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
         //MemoryUtil.memFree(buffer);
-        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
 
-        GL30.glBindVertexArray(vaoId);
+        glBindVertexArray(vaoId);
 
         while (!engineWindow.isCloseRequest()) {
 
@@ -157,16 +154,16 @@ public class Engine {
             //рисование в окне
 
             //стираем буффер
-            GL11.glClearColor(0, 1, 0, 1);
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+            glClearColor(0, 1, 0, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
 
             //рисуем треугольник в буфере
-            GL30.glBindVertexArray(vaoId);
-            GL30.glEnableVertexAttribArray(0);
+            glBindVertexArray(vaoId);
+//            glEnableVertexAttribArray(0);
 //            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_romb.length / 3);
-            GL11.glDrawElements(GL11.GL_TRIANGLES, indexes.length, GL11.GL_UNSIGNED_INT, 0);
-            GL30.glDisableVertexAttribArray(0);
-            GL30.glBindVertexArray(vaoId);
+            glDrawElements(GL_TRIANGLES, indexes.length, GL_UNSIGNED_INT, 0);
+            glDisableVertexAttribArray(0);
+            glBindVertexArray(vaoId);
 
             //обновляем окно
             engineWindow.update();

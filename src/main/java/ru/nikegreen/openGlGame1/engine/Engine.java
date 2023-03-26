@@ -125,7 +125,9 @@ public class Engine {
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         //FloatBuffer buffer = storeDataInFloatBuffer(vbo_quad);
         glBufferData(GL_ARRAY_BUFFER, putData(vbo_quad), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
+
+        //glEnableVertexAttribArray(0);
+
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
         //MemoryUtil.memFree(buffer);
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
@@ -159,7 +161,7 @@ public class Engine {
 
             //рисуем треугольник в буфере
             glBindVertexArray(vaoId);
-//            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(0);
 //            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_romb.length / 3);
             glDrawElements(GL_TRIANGLES, indexes.length, GL_UNSIGNED_INT, 0);
             glDisableVertexAttribArray(0);

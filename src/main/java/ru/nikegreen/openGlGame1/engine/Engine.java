@@ -106,7 +106,7 @@ public class Engine {
 
         int vboId = GL30.glGenBuffers();
         GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
-        FloatBuffer buffer = storeDataInFloatBuffer(v_quad);
+        FloatBuffer buffer = storeDataInFloatBuffer(v_romb);
         GL30.glBufferData(GL30.GL_ARRAY_BUFFER, buffer, GL30.GL_STATIC_DRAW);
         GL30.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
         MemoryUtil.memFree(buffer);
@@ -142,7 +142,7 @@ public class Engine {
             //рисуем треугольник в буфере
             GL30.glBindVertexArray(vaoId);
             GL30.glEnableVertexAttribArray(0);
-            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_quad.length / 3);
+            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_romb.length / 3);
             GL30.glDisableVertexAttribArray(0);
             GL30.glBindVertexArray(vaoId);
 

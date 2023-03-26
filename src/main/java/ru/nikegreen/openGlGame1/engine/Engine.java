@@ -11,6 +11,8 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
+import static ru.nikegreen.openGlGame1.util.MemBuffer.storeDataInFloatBuffer;
+import static ru.nikegreen.openGlGame1.util.MemBuffer.storeDataInIntBuffer;
 
 /**
  * Логика работы
@@ -62,25 +64,6 @@ public class Engine {
         keyboard = new Keyboard(engineWindow);
         mouse = new Mouse(engineWindow);
         update();
-    }
-
-    /**
-     *
-     * @param data
-     * @return
-     */
-    public FloatBuffer storeDataInFloatBuffer(float[] data) {
-        FloatBuffer buffer = MemoryUtil.memAllocFloat(data.length);
-        buffer.put(data);
-        buffer.flip();
-        return buffer;
-    }
-
-    public IntBuffer storeDataInIntBuffer(int[] data) {
-        IntBuffer buffer = MemoryUtil.memAllocInt(data.length);
-        buffer.put(data);
-        buffer.flip();
-        return buffer;
     }
 
     /**

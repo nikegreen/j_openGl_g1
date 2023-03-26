@@ -143,11 +143,9 @@ public class Engine {
 
             //рисуем в буфере
             glBindVertexArray(vaoId);
-//            glEnableVertexAttribArray(0);
             shader.bind();
             glDrawElements(GL_TRIANGLES, ibo_quad.length, GL_UNSIGNED_INT, 0);
             shader.unBind();
-//            glDisableVertexAttribArray(0);
             glBindVertexArray(vaoId);
 
             //обновляем окно

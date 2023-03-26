@@ -79,12 +79,12 @@ public class Engine {
         //позиции вершин (vbo)
         //фигура квадрат только вершины квадрата
         //треугольники через индексы вершин (ibo_quad)
-        float[] vbo_quad = {
-                0.5f, 0.5f, 0.0f,
-                -0.5f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-        };
+//        float[] vbo_quad = {
+//                0.5f, 0.5f, 0.0f,
+//                -0.5f, 0.5f, 0.0f,
+//                -0.5f, -0.5f, 0.0f,
+//                0.5f, -0.5f, 0.0f
+//        };
 
         //индексы рисования квадрата из вершин в vbo_quad
         int[] ibo_quad = {
@@ -93,11 +93,20 @@ public class Engine {
         };
 
         //цвета вершин
-        float[] v_colours = {
-                1.0f, 1.0f, 0.0f, 1.0f,
-                0.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, 0.0f, 1.0f, 1.0f,
-                0.0f, 1.0f, 1.0f, 1.0f
+//        float[] v_colours = {
+//                1.0f, 1.0f, 0.0f, 1.0f,
+//                0.0f, 0.0f, 1.0f, 1.0f,
+//                1.0f, 0.0f, 1.0f, 1.0f,
+//                0.0f, 1.0f, 1.0f, 1.0f
+//        };
+
+        //вершины (x,y,z) + цвета (rgba)
+        float[] veritces = {
+        //вершины (x,   y,    z) + цвета (red  green blue  alpha)
+                0.5f, 0.5f, 0.0f,        1.0f, 1.0f, 0.0f, 1.0f,
+                -0.5f, 0.5f, 0.0f,       0.0f, 0.0f, 1.0f, 1.0f,
+                -0.5f, -0.5f, 0.0f,      1.0f, 0.0f, 1.0f, 1.0f,
+                0.5f, -0.5f, 0.0f,       0.0f, 1.0f, 1.0f, 1.0f
         };
 
         //создадим массив вершин
@@ -107,18 +116,12 @@ public class Engine {
 
         int vboId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, putData(vbo_quad), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, putData(veritces), GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-
-
-        int vboIdColours = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboIdColours);
-        glBufferData(GL_ARRAY_BUFFER, putData(v_colours), GL_STATIC_DRAW);
+        //--------------------------------------------------------------  7 столбцов * 4 строки
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 7 * 4, 0);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
-
-
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 7 * 4, 12);
         //связываем индексы
         //int iboId = glCreateBuffers(); //openGL 4.5
         int iboId = glGenBuffers(); //openGL 3.3

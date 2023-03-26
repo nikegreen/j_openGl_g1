@@ -86,18 +86,18 @@ public class Engine {
                 0.5f, -0.5f, 0.0f,
         };
 
+        //индексы рисования квадрата из вершин в vbo_quad
+        int[] ibo_quad = {
+                0, 1, 2,
+                0, 2, 3
+        };
+
         //цвета вершин
         float[] v_colours = {
                 1.0f, 1.0f, 0.0f, 1.0f,
                 0.0f, 0.0f, 1.0f, 1.0f,
                 1.0f, 0.0f, 1.0f, 1.0f,
                 0.0f, 1.0f, 1.0f, 1.0f
-        };
-
-        //индексы рисования квадрата из вершин в vbo_quad
-        int[] ibo_quad = {
-                0, 1, 2,
-                0, 2, 3
         };
 
         //создадим массив вершин
@@ -113,7 +113,7 @@ public class Engine {
 
 
         int vboIdColours = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBindBuffer(GL_ARRAY_BUFFER, vboIdColours);
         glBufferData(GL_ARRAY_BUFFER, putData(v_colours), GL_STATIC_DRAW);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
@@ -143,13 +143,11 @@ public class Engine {
 
             //рисуем в буфере
             glBindVertexArray(vaoId);
-            glEnableVertexAttribArray(0);
-            glEnableVertexAttribArray(1);
+//            glEnableVertexAttribArray(0);
             shader.bind();
             glDrawElements(GL_TRIANGLES, ibo_quad.length, GL_UNSIGNED_INT, 0);
             shader.unBind();
-            glDisableVertexAttribArray(1);
-            glDisableVertexAttribArray(0);
+//            glDisableVertexAttribArray(0);
             glBindVertexArray(vaoId);
 
             //обновляем окно

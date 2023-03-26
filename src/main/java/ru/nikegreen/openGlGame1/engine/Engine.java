@@ -11,8 +11,7 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-import static ru.nikegreen.openGlGame1.util.MemBuffer.storeDataInFloatBuffer;
-import static ru.nikegreen.openGlGame1.util.MemBuffer.storeDataInIntBuffer;
+import static ru.nikegreen.openGlGame1.util.MemBuffer.*;
 
 /**
  * Логика работы
@@ -121,17 +120,17 @@ public class Engine {
         //связываем индексы
         int iboId = GL30.glGenBuffers();
         GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, iboId);
-        IntBuffer intBuffer = storeDataInIntBuffer(indexes);
-        GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, intBuffer, GL30.GL_STATIC_DRAW);
-        MemoryUtil.memFree(intBuffer); //освобождаем память занятую intBuffer
+        //IntBuffer intBuffer = storeDataInIntBuffer(indexes);
+        GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, putData(indexes), GL30.GL_STATIC_DRAW);
+        //MemoryUtil.memFree(intBuffer); //освобождаем память занятую intBuffer
 
 
         int vboId = GL30.glGenBuffers();
         GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
-        FloatBuffer buffer = storeDataInFloatBuffer(vbo_quad);
-        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, buffer, GL30.GL_STATIC_DRAW);
+        //FloatBuffer buffer = storeDataInFloatBuffer(vbo_quad);
+        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, putData(vbo_quad), GL30.GL_STATIC_DRAW);
         GL30.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
-        MemoryUtil.memFree(buffer);
+        //MemoryUtil.memFree(buffer);
         GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
 
         GL30.glBindVertexArray(vaoId);

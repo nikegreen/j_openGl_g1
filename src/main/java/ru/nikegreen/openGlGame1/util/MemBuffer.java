@@ -10,19 +10,19 @@ import java.nio.LongBuffer;
 import static org.lwjgl.system.MemoryStack.stackGet;
 
 public class MemBuffer {
-    public static FloatBuffer storeDataInFloatBuffer(float[] data) {
-        FloatBuffer buffer = MemoryUtil.memAllocFloat(data.length);
-        buffer.put(data);
-        buffer.flip();
-        return buffer;
-    }
-
-    public static IntBuffer storeDataInIntBuffer(int[] data) {
-        IntBuffer buffer = MemoryUtil.memAllocInt(data.length);
-        buffer.put(data);
-        buffer.flip();
-        return buffer;
-    }
+//    public static FloatBuffer storeDataInFloatBuffer(float[] data) {
+//        FloatBuffer buffer = MemoryUtil.memAllocFloat(data.length);
+//        buffer.put(data);
+//        buffer.flip();
+//        return buffer;
+//    }
+//
+//    public static IntBuffer storeDataInIntBuffer(int[] data) {
+//        IntBuffer buffer = MemoryUtil.memAllocInt(data.length);
+//        buffer.put(data);
+//        buffer.flip();
+//        return buffer;
+//    }
 
     /**
      * Складывем массив в память стека openGL
@@ -68,5 +68,4 @@ public class MemBuffer {
                 .put(data)
                 .flip();
     }
-
 }

@@ -74,10 +74,31 @@ public class Engine {
      * основной цикл рисования в окне OpenGL
      */
     public void update() {
-        float[] v_position = {
+        //фигура треугольник
+        float[] v_triangle = {
                 0.0f, 0.5f, 0.0f,
                 -0.5f, -0.5f, 0.0f,
                 0.5f, -0.5f, 0.0f
+        };
+
+        //фигура квадрат
+        float[] v_quad = {
+                0.5f, 0.5f, 0.0f,
+                -0.5f, 0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.5f, 0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f
+        };
+
+        //фигура ромб
+        float[] v_romb = {
+                0.0f, 0.5f, 0.0f,
+                -0.5f, 0.0f, 0.0f,
+                0.5f, -0.0f, 0.0f,
+                0.5f, 0.0f, 0.0f,
+                -0.5f, -0.0f, 0.0f,
+                0.0f, -0.5f, 0.0f
         };
 
         int vaoId = GL30.glGenVertexArrays();
@@ -85,7 +106,7 @@ public class Engine {
 
         int vboId = GL30.glGenBuffers();
         GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
-        FloatBuffer buffer = storeDataInFloatBuffer(v_position);
+        FloatBuffer buffer = storeDataInFloatBuffer(v_quad);
         GL30.glBufferData(GL30.GL_ARRAY_BUFFER, buffer, GL30.GL_STATIC_DRAW);
         GL30.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
         MemoryUtil.memFree(buffer);
@@ -121,7 +142,7 @@ public class Engine {
             //рисуем треугольник в буфере
             GL30.glBindVertexArray(vaoId);
             GL30.glEnableVertexAttribArray(0);
-            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_position.length / 3);
+            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_quad.length / 3);
             GL30.glDisableVertexAttribArray(0);
             GL30.glBindVertexArray(vaoId);
 

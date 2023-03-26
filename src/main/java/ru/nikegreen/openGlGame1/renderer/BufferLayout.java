@@ -13,7 +13,7 @@ public class BufferLayout {
     @Getter
     private int stride = 0;
 
-    public BufferLayout(VertexAttribute[] attributes) {
+    public BufferLayout(VertexAttribute... attributes) {
         this.attributes = new ArrayList<>();
         this.attributes.addAll(Arrays.stream(attributes).toList());
     }

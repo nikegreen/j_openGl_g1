@@ -1,5 +1,9 @@
 package ru.nikegreen.openGlGame1.renderer;
 
+import static org.lwjgl.opengl.GL11C.GL_FLOAT;
+import static org.lwjgl.opengl.GL11C.GL_INT;
+import static org.lwjgl.opengl.GL20.GL_BOOL;
+
 public class VertexAttribute {
     public static enum ShaderDataType {
         none(0),
@@ -66,6 +70,26 @@ public class VertexAttribute {
             case 10: return 3 * 3;
             case 11: return 4 * 4;
             case 12: return 1;
+        }
+        System.out.println("Ошибка! Неизвестный тип данных для шейдера!");
+        return 0;
+    }
+
+    public static int convertShaderTypeToOpenGL(ShaderDataType type) {
+        switch (type.type) {
+            case 1: return GL_INT;
+            case 2: return GL_INT;
+            case 3: return GL_INT;
+            case 4: return GL_INT;
+            case 5: return GL_FLOAT;
+            case 6: return GL_FLOAT;
+            case 7: return GL_FLOAT;
+            case 8: return GL_FLOAT;
+            case 9: return GL_FLOAT;
+            case 10: return GL_FLOAT;
+            case 11: return GL_FLOAT;
+            case 12: return GL_BOOL;
+            case 13: return GL_FLOAT;
         }
         System.out.println("Ошибка! Неизвестный тип данных для шейдера!");
         return 0;

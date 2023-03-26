@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
@@ -63,8 +64,20 @@ public class Engine {
         update();
     }
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     public FloatBuffer storeDataInFloatBuffer(float[] data) {
         FloatBuffer buffer = MemoryUtil.memAllocFloat(data.length);
+        buffer.put(data);
+        buffer.flip();
+        return buffer;
+    }
+
+    public IntBuffer storeDataInIntBuffer(int[] data) {
+        IntBuffer buffer = MemoryUtil.memAllocInt(data.length);
         buffer.put(data);
         buffer.flip();
         return buffer;
@@ -74,6 +87,17 @@ public class Engine {
      * основной цикл рисования в окне OpenGL
      */
     public void update() {
+        //позиции вершин (vbo)
+        //фигура квадрат только вершины квадрата
+        //треугольники через индексы вершин
+        float[] vbo_quad = {
+                0.5f, 0.5f, 0.0f,
+                -0.5f, 0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+        };
+
+        //позиции вершин (vbo)
         //фигура треугольник
         float[] v_triangle = {
                 0.0f, 0.5f, 0.0f,
@@ -81,6 +105,7 @@ public class Engine {
                 0.5f, -0.5f, 0.0f
         };
 
+        //позиции вершин (vbo)
         //фигура квадрат
         float[] v_quad = {
                 0.5f, 0.5f, 0.0f,
@@ -91,6 +116,7 @@ public class Engine {
                 0.5f, -0.5f, 0.0f
         };
 
+        //позиции вершин (vbo)
         //фигура ромб
         float[] v_romb = {
                 0.0f, 0.5f, 0.0f,
@@ -101,12 +127,25 @@ public class Engine {
                 0.0f, -0.5f, 0.0f
         };
 
+        int[] indexes = {
+                0, 1, 2,
+                0, 2, 3
+        };
+
         int vaoId = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(vaoId);
 
+        //связываем индексы
+        int iboId = GL30.glGenBuffers();
+        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, iboId);
+        IntBuffer intBuffer = storeDataInIntBuffer(indexes);
+        GL30.glBufferData(GL30.GL_ELEMENT_ARRAY_BUFFER, intBuffer, GL30.GL_STATIC_DRAW);
+        MemoryUtil.memFree(intBuffer); //освобождаем память занятую intBuffer
+
+
         int vboId = GL30.glGenBuffers();
         GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
-        FloatBuffer buffer = storeDataInFloatBuffer(v_romb);
+        FloatBuffer buffer = storeDataInFloatBuffer(vbo_quad);
         GL30.glBufferData(GL30.GL_ARRAY_BUFFER, buffer, GL30.GL_STATIC_DRAW);
         GL30.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
         MemoryUtil.memFree(buffer);
@@ -142,7 +181,8 @@ public class Engine {
             //рисуем треугольник в буфере
             GL30.glBindVertexArray(vaoId);
             GL30.glEnableVertexAttribArray(0);
-            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_romb.length / 3);
+//            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_romb.length / 3);
+            GL11.glDrawElements(GL11.GL_TRIANGLES, indexes.length, GL11.GL_UNSIGNED_INT, 0);
             GL30.glDisableVertexAttribArray(0);
             GL30.glBindVertexArray(vaoId);
 

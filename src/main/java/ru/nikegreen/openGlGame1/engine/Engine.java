@@ -2,9 +2,12 @@ package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
 import org.lwjgl.opengl.GL11;
+import ru.nikegreen.openGlGame1.renderer.Shader;
+
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45C.glCreateBuffers;
 import static org.lwjgl.opengl.GL45C.glCreateVertexArrays;
+import static ru.nikegreen.openGlGame1.util.FileUtil.separatorNormalizer;
 import static ru.nikegreen.openGlGame1.util.MemBuffer.*;
 
 /**
@@ -37,6 +40,12 @@ public class Engine {
     private Mouse mouse;
 
     /**
+     * Создание шейдеров
+     */
+    @Getter
+    private Shader shader;
+
+    /**
      * запуск OpenGL приложения
      */
     public void run() {
@@ -56,6 +65,10 @@ public class Engine {
         engineWindow.create();
         keyboard = new Keyboard(engineWindow);
         mouse = new Mouse(engineWindow);
+        shader = new Shader(
+                separatorNormalizer("shaders/Rectangle.vert"),
+                separatorNormalizer("shaders/Rectangle.frag")
+        );
         update();
     }
 
@@ -163,7 +176,9 @@ public class Engine {
             glBindVertexArray(vaoId);
             glEnableVertexAttribArray(0);
 //            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, v_romb.length / 3);
+            shader.bind();
             glDrawElements(GL_TRIANGLES, indexes.length, GL_UNSIGNED_INT, 0);
+            shader.unBind();
             glDisableVertexAttribArray(0);
             glBindVertexArray(vaoId);
 

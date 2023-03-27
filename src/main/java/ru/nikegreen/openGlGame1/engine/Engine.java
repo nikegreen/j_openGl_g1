@@ -131,7 +131,8 @@ public class Engine {
         );
         int attributeId = 0;
         for (VertexAttribute attribute: layout.getAttributes()) {
-            addAttribute(attributeId++, attribute, layout.getStride());
+            layout.addAttribute(attributeId++);
+            //addAttribute(attributeId++, attribute, layout.getStride());
         }
         //связываем индексы
         //int iboId = glCreateBuffers(); //openGL 4.5
@@ -167,18 +168,18 @@ public class Engine {
         }
     }
 
-    public static void addAttribute(
-            int attributeId,
-            final VertexAttribute attribute,
-            int bufferStride) {
-        glEnableVertexAttribArray(attributeId);
-        glVertexAttribPointer(
-                attributeId,
-                attribute.getElementAttribSize(attribute.type),
-                convertShaderTypeToOpenGL(attribute.type),
-                attribute.normalized ? true : false,
-                bufferStride,
-                attribute.offset
-        );
-    }
+//    public static void addAttribute(
+//            int attributeId,
+//            final VertexAttribute attribute,
+//            int bufferStride) {
+//        glEnableVertexAttribArray(attributeId);
+//        glVertexAttribPointer(
+//                attributeId,
+//                attribute.getElementAttribSize(attribute.type),
+//                convertShaderTypeToOpenGL(attribute.type),
+//                attribute.normalized ? true : false,
+//                bufferStride,
+//                attribute.offset
+//        );
+//    }
 }

@@ -121,7 +121,7 @@ public class Engine {
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         glBufferData(GL_ARRAY_BUFFER, putData(veritces), GL_STATIC_DRAW);
 //        glEnableVertexAttribArray(0);
-//        //--------------------------------------------------------------  7 столбцов * 4 строки
+//        //--------------------------------- 7 столбцов * 4 байта флоат
 //        glVertexAttribPointer(0, 3, GL_FLOAT, false, 7 * 4, 0);
 //        glEnableVertexAttribArray(1);
 //        glVertexAttribPointer(1, 4, GL_FLOAT, false, 7 * 4, 12);
@@ -129,11 +129,8 @@ public class Engine {
                 new VertexAttribute("attrib_Position", VertexAttribute.ShaderDataType.t_float3),
                 new VertexAttribute("attrib_Colour", VertexAttribute.ShaderDataType.t_float4)
         );
-        int attributeId = 0;
-        for (VertexAttribute attribute: layout.getAttributes()) {
-            layout.addAttribute(attributeId++);
-            //addAttribute(attributeId++, attribute, layout.getStride());
-        }
+        int attributeId = layout.prepareBuffer(0);
+
         //связываем индексы
         //int iboId = glCreateBuffers(); //openGL 4.5
         int iboId = glGenBuffers(); //openGL 3.3

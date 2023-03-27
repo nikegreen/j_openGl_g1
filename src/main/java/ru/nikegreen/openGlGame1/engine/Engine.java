@@ -2,9 +2,7 @@ package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
 import org.lwjgl.opengl.GL11;
-import ru.nikegreen.openGlGame1.renderer.BufferLayout;
-import ru.nikegreen.openGlGame1.renderer.Shader;
-import ru.nikegreen.openGlGame1.renderer.VertexAttribute;
+import ru.nikegreen.openGlGame1.renderer.*;
 
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45C.glCreateBuffers;
@@ -112,6 +110,19 @@ public class Engine {
                 0.5f, -0.5f, 0.0f,       0.0f, 1.0f, 1.0f, 1.0f
         };
 
+        VertexArrayObj vertexArrayObj = new VertexArrayObj();
+        VertexBufferObject vertexBufferObj = new VertexBufferObject(veritces);
+        vertexBufferObj.setLayout(
+                new BufferLayout(
+                        new VertexAttribute("attrib_Position", VertexAttribute.ShaderDataType.t_float3),
+                        new VertexAttribute("attrib_Colour", VertexAttribute.ShaderDataType.t_float4)
+                )
+        );
+        vertexArrayObj.putBuffer(vertexBufferObj);
+        IndexBufferObj indexBufferObj = new IndexBufferObj(ibo_quad);
+        vertexArrayObj.putBuffer(indexBufferObj);
+
+/*
         //создадим массив вершин
         //int vaoId = glCreateVertexArrays(); //openGL 4.5
         int vaoId = glGenVertexArrays(); //openGL 3.3
@@ -129,7 +140,6 @@ public class Engine {
                 new VertexAttribute("attrib_Position", VertexAttribute.ShaderDataType.t_float3),
                 new VertexAttribute("attrib_Colour", VertexAttribute.ShaderDataType.t_float4)
         );
-        int attributeId = layout.prepareBuffer(0);
 
         //связываем индексы
         //int iboId = glCreateBuffers(); //openGL 4.5
@@ -140,7 +150,7 @@ public class Engine {
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
 
         glBindVertexArray(vaoId);
-
+*/
         while (!engineWindow.isCloseRequest()) {
 
             //проверка кнопок
@@ -154,29 +164,16 @@ public class Engine {
             glClear(GL_COLOR_BUFFER_BIT);
 
             //рисуем в буфере
-            glBindVertexArray(vaoId);
+            //glBindVertexArray(vaoId);
+            vertexArrayObj.bind();
             shader.bind();
             glDrawElements(GL_TRIANGLES, ibo_quad.length, GL_UNSIGNED_INT, 0);
             shader.unBind();
-            glBindVertexArray(vaoId);
+            vertexArrayObj.unBind();
+            //glBindVertexArray(vaoId);
 
             //обновляем окно
             engineWindow.update();
         }
     }
-
-//    public static void addAttribute(
-//            int attributeId,
-//            final VertexAttribute attribute,
-//            int bufferStride) {
-//        glEnableVertexAttribArray(attributeId);
-//        glVertexAttribPointer(
-//                attributeId,
-//                attribute.getElementAttribSize(attribute.type),
-//                convertShaderTypeToOpenGL(attribute.type),
-//                attribute.normalized ? true : false,
-//                bufferStride,
-//                attribute.offset
-//        );
-//    }
 }

@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import ru.nikegreen.openGlGame1.vector.*;
 
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniform4f;
 import static org.lwjgl.opengl.GL30C.*;
 
 public class Shader {
@@ -109,5 +112,54 @@ public class Shader {
 
     public void unBind() {
         glUseProgram(0);
+    }
+
+    public void setUniformFromInt(String name, int value) {
+        glUniform1i(glGetUniformLocation(programId, name), value);
+    }
+
+    public void setUniformFromInt2(String name, int value, int value2) {
+        glUniform2i(glGetUniformLocation(programId, name), value, value2);
+    }
+
+    public void setUniformFromInt3(String name, int value, int value2, int value3) {
+        glUniform3i(glGetUniformLocation(programId, name), value, value2, value3);
+    }
+
+    public void setUniformFromInt4(String name, int value, int value2, int value3, int value4) {
+        glUniform4i(glGetUniformLocation(programId, name), value, value2, value3, value4);
+    }
+
+    public void setUniformFromFloat(String name, float value) {
+        glUniform1f(glGetUniformLocation(programId, name), value);
+    }
+
+    public void setUniformFromFloat2(String name, float value, float value2) {
+        glUniform2f(glGetUniformLocation(programId, name), value, value2);
+    }
+
+    public void setUniformFromFloat3(String name, float value, float value2, float value3) {
+        glUniform3f(glGetUniformLocation(programId, name), value, value2, value3);
+    }
+
+    public void setUniformFromFloat4(String name, float value, float value2, float value3, float value4) {
+        glUniform4f(glGetUniformLocation(programId, name), value, value2, value3, value4);
+    }
+
+    public void setUniformFromBoolean(String name, boolean value) {
+        glUniform1i(glGetUniformLocation(programId, name),
+                value == true ? 1 : 0);
+    }
+
+    public void setUniformFromVec2f(String name, Vector2f value) {
+        glUniform2f(glGetUniformLocation(programId, name), value.x, value.y);
+    }
+
+    public void setUniformFromVec3f(String name, Vector3f value) {
+        glUniform3f(glGetUniformLocation(programId, name), value.x, value.y, value.z);
+    }
+
+    public void setUniformFromVec2f(String name, Vector4f value) {
+        glUniform4f(glGetUniformLocation(programId, name), value.x, value.y, value.z, value.w);
     }
 }

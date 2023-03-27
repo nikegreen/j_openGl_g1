@@ -3,6 +3,7 @@ package ru.nikegreen.openGlGame1.engine;
 import lombok.Getter;
 import org.lwjgl.opengl.GL11;
 import ru.nikegreen.openGlGame1.renderer.*;
+import ru.nikegreen.openGlGame1.vector.Vector4f;
 
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45C.glCreateBuffers;
@@ -47,6 +48,12 @@ public class Engine {
     private Shader shader;
 
     /**
+     * texture
+     */
+    @Getter
+    private Texture texture;
+
+    /**
      * запуск OpenGL приложения
      */
     public void run() {
@@ -70,6 +77,14 @@ public class Engine {
                 separatorNormalizer("shaders/Rectangle.vert"),
                 separatorNormalizer("shaders/Rectangle.frag")
         );
+        //texture = new Texture("textures/texture1.png");
+        texture = new Texture("textures/texture2.jpg");
+        shader.bind();
+        shader.setUniformFromInt("u_TextureSampler", 0);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         update();
     }
 
@@ -101,13 +116,13 @@ public class Engine {
 //                0.0f, 1.0f, 1.0f, 1.0f
 //        };
 
-        //вершины (x,y,z) + цвета (rgba)
+        //вершины (x,y,z) + цвета (rgba) + коорд.текстур(x,y) против часовой стрелки
         float[] veritces = {
-        //вершины (x,   y,    z) + цвета (red  green blue  alpha)
-                0.5f, 0.5f, 0.0f,        1.0f, 1.0f, 0.0f, 1.0f,
-                -0.5f, 0.5f, 0.0f,       0.0f, 0.0f, 1.0f, 1.0f,
-                -0.5f, -0.5f, 0.0f,      1.0f, 0.0f, 1.0f, 1.0f,
-                0.5f, -0.5f, 0.0f,       0.0f, 1.0f, 1.0f, 1.0f
+        //вершины (x,   y,    z) + цвета (red  green blue  alpha) коорд.текстур
+                0.5f, 0.5f, 0.0f,        1.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+                -0.5f, 0.5f, 0.0f,       0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f,
+                -0.5f, -0.5f, 0.0f,      1.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f,
+                0.5f, -0.5f, 0.0f,       0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 1.0f
         };
 
         VertexArrayObj vertexArrayObj = new VertexArrayObj();
@@ -115,42 +130,16 @@ public class Engine {
         vertexBufferObj.setLayout(
                 new BufferLayout(
                         new VertexAttribute("attrib_Position", VertexAttribute.ShaderDataType.t_float3),
-                        new VertexAttribute("attrib_Colour", VertexAttribute.ShaderDataType.t_float4)
+                        new VertexAttribute("attrib_Colour", VertexAttribute.ShaderDataType.t_float4),
+                        new VertexAttribute("attrib_TextureCoord", VertexAttribute.ShaderDataType.t_float2)
                 )
         );
         vertexArrayObj.putBuffer(vertexBufferObj);
         IndexBufferObj indexBufferObj = new IndexBufferObj(ibo_quad);
         vertexArrayObj.putBuffer(indexBufferObj);
 
-/*
-        //создадим массив вершин
-        //int vaoId = glCreateVertexArrays(); //openGL 4.5
-        int vaoId = glGenVertexArrays(); //openGL 3.3
-        glBindVertexArray(vaoId);
+        Vector4f colour = new Vector4f(0,0,0, 1);
 
-        int vboId = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, putData(veritces), GL_STATIC_DRAW);
-//        glEnableVertexAttribArray(0);
-//        //--------------------------------- 7 столбцов * 4 байта флоат
-//        glVertexAttribPointer(0, 3, GL_FLOAT, false, 7 * 4, 0);
-//        glEnableVertexAttribArray(1);
-//        glVertexAttribPointer(1, 4, GL_FLOAT, false, 7 * 4, 12);
-        BufferLayout layout = new BufferLayout(
-                new VertexAttribute("attrib_Position", VertexAttribute.ShaderDataType.t_float3),
-                new VertexAttribute("attrib_Colour", VertexAttribute.ShaderDataType.t_float4)
-        );
-
-        //связываем индексы
-        //int iboId = glCreateBuffers(); //openGL 4.5
-        int iboId = glGenBuffers(); //openGL 3.3
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, putData(ibo_quad), GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-
-        glBindVertexArray(vaoId);
-*/
         while (!engineWindow.isCloseRequest()) {
 
             //проверка кнопок
@@ -160,16 +149,19 @@ public class Engine {
             //рисование в окне
 
             //стираем буффер
-            glClearColor(0, 1, 0, 1);
+            glClearColor(0, 1, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
             //рисуем в буфере
             //glBindVertexArray(vaoId);
             vertexArrayObj.bind();
+            glActiveTexture(GL_TEXTURE0); // Активируем текстурный блок перед привязкой текстуры
+            texture.bind();
             shader.bind();
-            shader.setUniformFromFloat4("u_Colour", 1.0f, 0.0f, 0.0f, 1.0f);
+            shader.setUniformFromVec4f("u_Colour", colour);
             glDrawElements(GL_TRIANGLES, ibo_quad.length, GL_UNSIGNED_INT, 0);
             shader.unBind();
+            texture.unBind();
             vertexArrayObj.unBind();
             //glBindVertexArray(vaoId);
 

@@ -66,6 +66,9 @@ public class Shader {
             //получаем строку с ошибкой
             infoLog = glGetProgramInfoLog(program, maxLength);
             for (int shaderId : shaderIds) {
+                glDetachShader(program, shaderId);
+            }
+            for (int shaderId : shaderIds) {
                 glDeleteShader(shaderId);
             }
             //лог ошибки
@@ -114,6 +117,10 @@ public class Shader {
         glUseProgram(0);
     }
 
+    public void destroy() {
+        glDeleteProgram(programId);
+    }
+
     public void setUniformFromInt(String name, int value) {
         glUniform1i(glGetUniformLocation(programId, name), value);
     }
@@ -159,7 +166,12 @@ public class Shader {
         glUniform3f(glGetUniformLocation(programId, name), value.x, value.y, value.z);
     }
 
-    public void setUniformFromVec2f(String name, Vector4f value) {
+    public void setUniformFromVec4f(String name, Vector4f value) {
         glUniform4f(glGetUniformLocation(programId, name), value.x, value.y, value.z, value.w);
     }
+
+//    public void setUniformMat4(String name, Matrix4f mat)
+//    {
+//        glUniformMatrix4fv(glGetUniformLocation(programId, name), false, MemoryManagment.putData(mat));
+//    }
 }

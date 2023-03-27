@@ -1,6 +1,10 @@
 package ru.nikegreen.openGlGame1.util;
 
-import java.io.File;
+import org.lwjgl.BufferUtils;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 public class FileUtil {
     public static String separatorNormalizer(String fileName) {

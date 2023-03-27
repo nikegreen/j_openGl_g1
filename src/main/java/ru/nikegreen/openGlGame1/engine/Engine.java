@@ -167,6 +167,8 @@ public class Engine {
             //glBindVertexArray(vaoId);
             vertexArrayObj.bind();
             shader.bind();
+            glUniform4f(glGetUniformLocation(shader.programId, "u_Colour"),
+                    1, 1, 0, 1);
             glDrawElements(GL_TRIANGLES, ibo_quad.length, GL_UNSIGNED_INT, 0);
             shader.unBind();
             vertexArrayObj.unBind();

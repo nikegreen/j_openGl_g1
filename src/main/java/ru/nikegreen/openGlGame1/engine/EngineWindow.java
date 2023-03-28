@@ -100,18 +100,8 @@ public class EngineWindow {
             glfwSetWindowSizeLimits(window, width, height, 1980, 1200);
         } // the stack frame is popped automatically
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( action == GLFW_PRESS ) {
-                keys[key] = true;
-            }
-            if ( key == GLFW_KEY_A && action == GLFW_RELEASE ) {
-                keys[key] = false;
-            }
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ) {
-                        glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-            }
-        });
+        //Keyboard.setCallback(Keyboard.defCallback);
+        Keyboard.setCallBackDefault(window);
 
 
         // Make the OpenGL context current

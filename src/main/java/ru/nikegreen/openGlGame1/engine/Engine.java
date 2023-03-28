@@ -89,9 +89,11 @@ public class Engine {
         shader.bind();
         shader.setUniformFromInt("u_TextureSampler", 0);
 
+        System.out.println("renderer: " + glGetString(GL_RENDERER));
+        System.out.println("vendor: " + glGetString(GL_VENDOR));
+        System.out.println("version: " + glGetString(GL_VERSION));
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
         update();
     }
 

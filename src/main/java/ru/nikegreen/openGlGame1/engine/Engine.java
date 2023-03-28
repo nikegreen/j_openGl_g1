@@ -1,16 +1,15 @@
 package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
-import org.lwjgl.opengl.GL11;
+import ru.nikegreen.openGlGame1.object.GameObject;
 import ru.nikegreen.openGlGame1.renderer.*;
+import ru.nikegreen.openGlGame1.vector.Vector3f;
 import ru.nikegreen.openGlGame1.vector.Vector4f;
 
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45C.glCreateBuffers;
 import static org.lwjgl.opengl.GL45C.glCreateVertexArrays;
-import static ru.nikegreen.openGlGame1.renderer.VertexAttribute.convertShaderTypeToOpenGL;
 import static ru.nikegreen.openGlGame1.util.FileUtil.separatorNormalizer;
-import static ru.nikegreen.openGlGame1.util.MemBuffer.*;
 
 /**
  * Логика работы
@@ -71,6 +70,7 @@ public class Engine {
     public void init() {
         engineWindow = new EngineWindow(WIDTH, HEIGHT, TITLE);
         engineWindow.create();
+        RenderEngine.init();
         keyboard = new Keyboard(engineWindow);
         mouse = new Mouse(engineWindow);
         shader = new Shader(
@@ -92,33 +92,15 @@ public class Engine {
      * основной цикл рисования в окне OpenGL
      */
     public void update() {
-        //позиции вершин (vbo)
-        //фигура квадрат только вершины квадрата
-        //треугольники через индексы вершин (ibo_quad)
-//        float[] vbo_quad = {
-//                0.5f, 0.5f, 0.0f,
-//                -0.5f, 0.5f, 0.0f,
-//                -0.5f, -0.5f, 0.0f,
-//                0.5f, -0.5f, 0.0f
-//        };
-
         //индексы рисования квадрата из вершин в vbo_quad
         int[] ibo_quad = {
                 0, 1, 2,
                 0, 2, 3
         };
 
-        //цвета вершин
-//        float[] v_colours = {
-//                1.0f, 1.0f, 0.0f, 1.0f,
-//                0.0f, 0.0f, 1.0f, 1.0f,
-//                1.0f, 0.0f, 1.0f, 1.0f,
-//                0.0f, 1.0f, 1.0f, 1.0f
-//        };
-
         //вершины (x,y,z) + цвета (rgba) + коорд.текстур(x,y) против часовой стрелки
         float[] veritces = {
-        //вершины (x,   y,    z) + цвета (red  green blue  alpha) коорд.текстур
+                //вершины (x,   y,    z) + цвета (red  green blue  alpha) коорд.текстур
                 0.5f, 0.5f, 0.0f,        1.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
                 -0.5f, 0.5f, 0.0f,       0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f,
                 -0.5f, -0.5f, 0.0f,      1.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f,
@@ -140,6 +122,14 @@ public class Engine {
 
         Vector4f colour = new Vector4f(0,0,0, 1);
 
+        GameObject gameObject = new GameObject(
+                new Vector3f(0,0,0),
+                new Vector3f(0,0,0),
+                new Vector3f(0,0,0)
+        );
+        gameObject.setModel(vertexArrayObj);
+        gameObject.setTexture(texture);
+
         while (!engineWindow.isCloseRequest()) {
 
             //проверка кнопок
@@ -147,26 +137,12 @@ public class Engine {
             //mouse
             mouse.handleMouseInput();
             //рисование в окне
-
-            //стираем буффер
-            glClearColor(0, 1, 1, 1);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            //рисуем в буфере
-            //glBindVertexArray(vaoId);
-            vertexArrayObj.bind();
-            //glActiveTexture(GL_TEXTURE0); // Активируем текстурный блок перед привязкой текстуры
-            texture.bind();
-            shader.bind();
-            shader.setUniformFromVec4f("u_Colour", colour);
-            glDrawElements(GL_TRIANGLES, ibo_quad.length, GL_UNSIGNED_INT, 0);
-            shader.unBind();
-            texture.unBind();
-            vertexArrayObj.unBind();
-            //glBindVertexArray(vaoId);
-
+            RenderEngine.begin(shader);
+            RenderEngine.renderGameObj(shader, gameObject);
+            RenderEngine.end(shader);
             //обновляем окно
-            engineWindow.update();
+            engineWindow.swapBuffers();
         }
+        RenderEngine.destroy();
     }
 }

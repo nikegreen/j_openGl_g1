@@ -8,4 +8,9 @@ import lombok.NoArgsConstructor;
 public class Vector2f {
     public float x;
     public float y;
+
+    public Vector2f(Vector2f vector2f) {
+        x = vector2f.x;
+        y = vector2f.y;
+    }
 }

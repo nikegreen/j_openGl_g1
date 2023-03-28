@@ -129,7 +129,7 @@ public class EngineWindow {
     /**
      * Обновление окна
      */
-    public void update() {
+    public void swapBuffers() {
         glfwPollEvents();
         glfwSwapBuffers(window);
     }

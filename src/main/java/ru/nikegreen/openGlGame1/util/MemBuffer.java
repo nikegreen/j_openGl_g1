@@ -1,5 +1,6 @@
 package ru.nikegreen.openGlGame1.util;
 
+import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.DoubleBuffer;
@@ -68,6 +69,4 @@ public class MemBuffer {
                 .put(data)
                 .flip();
     }
-
-
 }

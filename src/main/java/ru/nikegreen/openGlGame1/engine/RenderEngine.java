@@ -37,6 +37,7 @@ public class RenderEngine {
                 }
                 gameObject.getVertexArray().bind();
                 shader.bind();
+                shader.setUniformFromMat4f("u_ModelMatrix", gameObject.getModelMatrix());
                 //рисуем в буфере
                 //glActiveTexture(GL_TEXTURE0); // Активируем текстурный блок перед привязкой текстуры
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);// to do 6 заменить на ???
@@ -51,6 +52,6 @@ public class RenderEngine {
     }
 
     public static void destroy() {
-
+        glDisable(GL_BLEND);
     }
 }

@@ -8,9 +8,11 @@ out vec3 position;
 out vec4 colour;
 out vec2 textureCoord;
 
+uniform mat4 u_ModelMatrix;
+
 void main() {
     position = attrib_Position;
     colour = attrib_Colour;
     textureCoord = attrib_TextureCoord;
-    gl_Position = vec4(attrib_Position, 1.0f);
+    gl_Position = u_ModelMatrix * vec4(attrib_Position, 1.0f);
 }

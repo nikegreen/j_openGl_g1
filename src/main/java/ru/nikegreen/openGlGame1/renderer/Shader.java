@@ -1,15 +1,22 @@
 package ru.nikegreen.openGlGame1.renderer;
 
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+import org.lwjgl.BufferUtils;
+import ru.nikegreen.openGlGame1.util.MemBuffer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import ru.nikegreen.openGlGame1.vector.*;
 
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform4f;
@@ -170,8 +177,10 @@ public class Shader {
         glUniform4f(glGetUniformLocation(programId, name), value.x, value.y, value.z, value.w);
     }
 
-//    public void setUniformMat4(String name, Matrix4f mat)
-//    {
-//        glUniformMatrix4fv(glGetUniformLocation(programId, name), false, MemoryManagment.putData(mat));
-//    }
+    public void setUniformFromMat4f(String name, Matrix4f mat)
+    {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(4 * 4);
+        mat.get(buffer);
+        glUniformMatrix4fv(glGetUniformLocation(programId, name), false, buffer);
+    }
 }

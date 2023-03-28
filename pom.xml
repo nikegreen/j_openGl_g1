@@ -372,5 +372,17 @@
 		<version>1.18.22</version>
 		<scope>compile</scope>
 	</dependency>
+<!--	&lt;!&ndash; https://mvnrepository.com/artifact/slick-util/slick-util &ndash;&gt;-->
+<!--	<dependency>-->
+<!--		<groupId>slick-util</groupId>-->
+<!--		<artifactId>slick-util</artifactId>-->
+<!--		<version>1.0.0</version>-->
+<!--	</dependency>-->
+	<!-- https://mvnrepository.com/artifact/org.joml/joml-jdk8 -->
+	<dependency>
+		<groupId>org.joml</groupId>
+		<artifactId>joml-jdk8</artifactId>
+		<version>1.10.1</version>
+	</dependency>
 </dependencies>
 </project>

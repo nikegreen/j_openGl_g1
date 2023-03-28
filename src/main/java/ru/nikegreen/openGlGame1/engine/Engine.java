@@ -1,10 +1,13 @@
 package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import ru.nikegreen.openGlGame1.object.GameObject;
 import ru.nikegreen.openGlGame1.renderer.*;
-import ru.nikegreen.openGlGame1.vector.Vector3f;
-import ru.nikegreen.openGlGame1.vector.Vector4f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45C.glCreateBuffers;
@@ -52,6 +55,9 @@ public class Engine {
     @Getter
     private Texture texture;
 
+    @Getter
+    private List<GameObject> gameObjects;
+
     /**
      * запуск OpenGL приложения
      */
@@ -71,6 +77,7 @@ public class Engine {
         engineWindow = new EngineWindow(WIDTH, HEIGHT, TITLE);
         engineWindow.create();
         RenderEngine.init();
+        gameObjects = new ArrayList<>();
         keyboard = new Keyboard(engineWindow);
         mouse = new Mouse(engineWindow);
         shader = new Shader(
@@ -123,12 +130,22 @@ public class Engine {
         Vector4f colour = new Vector4f(0,0,0, 1);
 
         GameObject gameObject = new GameObject(
+                new Vector3f(-1.5f,0,0),
                 new Vector3f(0,0,0),
-                new Vector3f(0,0,0),
-                new Vector3f(0,0,0)
+                new Vector3f(1,1,1)
         );
         gameObject.setModel(vertexArrayObj);
         gameObject.setTexture(texture);
+        gameObjects.add(gameObject);
+
+        GameObject gameObject2 = new GameObject(
+                new Vector3f(0,0,0),
+                new Vector3f(0,0,0),
+                new Vector3f(1,1,1)
+        );
+        gameObject2.setModel(vertexArrayObj);
+        gameObject2.setTexture(texture);
+        gameObjects.add(gameObject2);
 
         while (!engineWindow.isCloseRequest()) {
 
@@ -136,13 +153,27 @@ public class Engine {
             keyboard.handleKeyboardInput();
             //mouse
             mouse.handleMouseInput();
+            //движение
+            float speed = 0.01f;
+            gameObject.getPosition().x += speed;
+            gameObject.getRotation().x += speed;
+            if (gameObject.getPosition().x >= 1.5f) {
+                gameObject.getPosition().x = -1.5f;
+            }
             //рисование в окне
             RenderEngine.begin(shader);
-            RenderEngine.renderGameObj(shader, gameObject);
+            for (GameObject go: gameObjects) {
+                RenderEngine.renderGameObj(shader, go);
+            }
             RenderEngine.end(shader);
             //обновляем окно
             engineWindow.swapBuffers();
         }
         RenderEngine.destroy();
+        //удаляем игровые объекты
+        for (GameObject obj: gameObjects) {
+            obj.destroy();
+        }
+        gameObjects.clear();
     }
 }

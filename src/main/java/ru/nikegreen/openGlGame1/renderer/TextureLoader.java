@@ -12,22 +12,34 @@ import ru.nikegreen.openGlGame1.Main;
 
 import static org.lwjgl.opengl.GL11.*;
 public class TextureLoader {
-    private static final int BYTES_PER_PIXEL = 4;//3 for RGB, 4 for RGBA
-
     public static int loadTexture(BufferedImage image) {
+        final int BYTES_PER_PIXEL = image.getColorModel().getPixelSize() / 8; //4;//3 for RGB, 4 for RGBA
 
         int[] pixels = new int[image.getWidth() * image.getHeight()];
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 
-        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * BYTES_PER_PIXEL); //4 for RGBA, 3 for RGB
+        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4); //4 for RGBA, 3 for RGB
 
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                int pixel = pixels[y * image.getWidth() + x];
-                buffer.put((byte) ((pixel >> 16) & 0xFF));     // Red component
-                buffer.put((byte) ((pixel >> 8) & 0xFF));      // Green component
-                buffer.put((byte) (pixel & 0xFF));               // Blue component
-                buffer.put((byte) ((pixel >> 24) & 0xFF));    // Alpha component. Only for RGBA
+        if (BYTES_PER_PIXEL == 4) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                for (int x = 0; x < image.getWidth(); x++) {
+                    int pixel = pixels[y * image.getWidth() + x];
+                    buffer.put((byte) ((pixel >> 16) & 0xFF));     // Red component
+                    buffer.put((byte) ((pixel >> 8) & 0xFF));      // Green component
+                    buffer.put((byte) (pixel & 0xFF));               // Blue component
+                    buffer.put((byte) ((pixel >> 24) & 0xFF));    // Alpha component. Only for RGBA
+                }
+            }
+        }
+        if (BYTES_PER_PIXEL == 3) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                for (int x = 0; x < image.getWidth(); x++) {
+                    int pixel = pixels[y * image.getWidth() + x];
+                    buffer.put((byte) ((pixel >> 16) & 0xFF));     // Red component
+                    buffer.put((byte) ((pixel >> 8) & 0xFF));      // Green component
+                    buffer.put((byte) (pixel & 0xFF));               // Blue component
+                    buffer.put((byte) 0xFF);    // Alpha component. Only for RGBA
+                }
             }
         }
 

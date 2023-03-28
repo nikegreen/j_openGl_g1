@@ -4,8 +4,7 @@ import lombok.Getter;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL33C;
-import ru.nikegreen.openGlGame1.Main;
-import ru.nikegreen.openGlGame1.util.FileUtil;
+
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -13,31 +12,62 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-//import static org.lwjgl.opengl.GL11C.*;
-//import static org.lwjgl.opengl.GL45C.glCreateTextures;
 import static org.lwjgl.opengl.GL33C.*;
-//import static org.lwjgl.opengles.GLES32.glTexStorage2D;
-import static org.lwjgl.opengl.GL33C.glTexSubImage2D;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 import static ru.nikegreen.openGlGame1.util.FileUtil.separatorNormalizer;
 import java.awt.image.BufferedImage;
 
+/**
+ * класс для использования текстур
+ */
 public class Texture {
+    /**
+     * ссылка на текстуру
+     */
     @Getter
     private int id;
+    /**
+     * Ширина текстуры в пикселях
+     */
     @Getter
     private int width;
+    /**
+     * высота текстуры в пикселях
+     */
     @Getter
     private int height;
+    /**
+     * количество байт в пикселе
+     */
     @Getter
     private int channels;
+
+    /**
+     * буфер с текстурой
+     */
     @Getter
     private ByteBuffer data;
+
+    /**
+     * Путь и имя файла с текстурой
+     */
     private String resource;
+
+    /**
+     * формат пикселя
+     */
     private int format;
+
+    /**
+     * внутренний формат пикселя
+     */
     private int internalFormat;
 
+    /**
+     * конструктор
+     * @param resource путь и имя файла с текстурой (.png, .jpg)
+     */
     public Texture(String resource) {
         this.resource = resource;
         IntBuffer w = BufferUtils.createIntBuffer(1);
@@ -46,11 +76,6 @@ public class Texture {
         try {
             BufferedImage image = loadImage(resource);//The path is inside the jar file
             id = TextureLoader.loadTexture(image);
-            //data = SOIL_load_image();
-            //data = stbi_load_from_memory(resourceToByteBuffer(resource), w, h, chan, 0);
-//            width = w.get();
-//            height = h.get();
-//            channels = chan.get(0);
             width = image.getWidth();
             height = image.getHeight();
             channels = image.getColorModel().getPixelSize() / 8;
@@ -67,105 +92,50 @@ public class Texture {
         } else {
             throw new IllegalArgumentException("Ошибка! Формат цветовых каналов не 3 и не 4! channels=" + channels);
         }
-//для openGL 4.5C
-//        this.id = glCreateTextures(GL_TEXTURE_2D);
-//        glTextureStorage2D(this.id, 1, this.internalFormat, this.width, this.height);
-//
-//        glTextureParameteri(this.id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//        glTextureParameteri(this.id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//        glTextureParameteri(this.id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-//        glTextureParameteri(this.id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-//
-//        glTextureSubImage2D(this.id, 0, 0, 0, this.width, this.height, this.format, GL_UNSIGNED_BYTE, data);
-
-//        //id = glCreateTextures(GL_TEXTURE_2D); // openGL 4.5
-//        id = glGenTextures(); // openGL 3.3
-//        //glBindTexture(GL_TEXTURE_2D, id); //openGL 3.3
-//        GL33C.glBindTexture(GL_TEXTURE_2D, id); //openGL 3.3
-//        //glTextureStorage2D(id, 1, internalFormat, width, height);//openGL 4.5
-//        //glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height); // openGL 3.3
-//
-//        //glTextureParameteri(); //openGL 4.5C
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//        //glTexImage2D(GL_TEXTURE_2D, 0, this.internalFormat, this.width, this.height, 0, this.format, GL_UNSIGNED_BYTE, data);
-//        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-//        glGenerateMipmap(GL_TEXTURE_2D);
-////        glTexSubImage2D(GL_TEXTURE_2D,
-////                0,
-////                0,
-////                0,
-////                width,
-////                height,
-////                format,
-////                GL_UNSIGNED_INT,
-////                data);
-//        glBindTexture(GL_TEXTURE_2D, 0);
-        //unBind();
-
-//        this.id = glGenTextures();
-//        glBindTexture(GL_TEXTURE_2D, id);
-//        //
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-//        //
-//        //единственная наверно заметная разница, тут мы используем glTexImage2D вместо glTextureStorage2D и glTextureSubImage2D.
-//        glTexImage2D(GL_TEXTURE_2D, 0, this.internalFormat, this.width, this.height, 0, this.format, GL_UNSIGNED_BYTE, data);
-//
-//        glBindTexture(GL_TEXTURE_2D,0);
-//
 //        if (data != null) {
 //            stbi_image_free(data);
 //        }
     }
 
+    /**
+     * присоеденить
+     */
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
+    /**
+     * отсоеденить
+     */
     public void unBind() {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    /**
+     *  освободить ресурсы
+     */
     public void destroy() {
         GL11.glDeleteTextures(id);
         //glDestroyTextures(this.id);
     }
 
+    /**
+     * Считать ресурс в буфер
+     * @param resource путь к папке и файлу
+     * @return буфер байтов
+     * @throws IOException в случае ошибки ввода вывода из файла.
+     */
     private ByteBuffer resourceToByteBuffer(final String resource) throws IOException
     {
         ByteBuffer buffer = null;
         String resource1 = separatorNormalizer(resource);
-//        File file = new File(resource);
-//
-//        FileInputStream fileInputStream = new FileInputStream(file);
-//        FileChannel fileChannel = fileInputStream.getChannel();
-//
-//        ByteBuffer buffer = BufferUtils.createByteBuffer((int) fileChannel.size() + 1);
-//
-//        while (fileChannel.read(buffer) != -1) {
-//            ;
-//        }
-//
-//        fileInputStream.close();
-//        fileChannel.close();
-//        buffer.flip();
         try {
             InputStream in = getClass().getClassLoader().getResourceAsStream(resource1);
             byte[] bytes = in.readAllBytes();
             byte[] bytes1 = new byte[bytes.length + 1];
             bytes1[bytes.length] = 0;
-            System.out.println("bytes len=" + bytes.length);
-            //buffer = BufferUtils.createByteBuffer((int) bytes.length + 1);
-            //buffer.put(bytes);
-            //buffer.flip();
             buffer = ByteBuffer.wrap(bytes1);
             buffer.flip();
-            System.out.println("resourceToByteBuffer " + resource1);
         } catch (IOException e) {
             System.out.println("Файл " + resource + " не может прочитаться!");
             e.printStackTrace();
@@ -174,6 +144,11 @@ public class Texture {
         return buffer;
     }
 
+    /**
+     * Загружаем картинку как буфер-имедж
+     * @param loc путь и имя файла с картинкой
+     * @return тип {@link }
+     */
     public BufferedImage loadImage(String loc) {
         try {
             return ImageIO.read(getClass().getClassLoader().getResource(loc));
@@ -183,3 +158,72 @@ public class Texture {
         return null;
     }
 }
+
+/*
+// без использования AWT
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.GL_UNPACK_ALIGNMENT;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glPixelStorei;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL30.glGenerateMipmap;
+import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.demo.util.IOUtils.ioResourceToByteBuffer;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.system.MemoryStack;
+
+public class Texture{
+    private int width;
+    private int height;
+    private int id;
+
+    public Texture(String imagePath) {
+        ByteBuffer imageData = ioResourceToByteBuffer(imagePath, 1024);
+
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer w = stack.mallocInt(1);
+            IntBuffer h = stack.mallocInt(1);
+            IntBuffer components = stack.mallocInt(1);
+
+            // Decode texture image into a byte buffer
+            ByteBuffer decodedImage = stbi_load_from_memory(imageData, w, h, components, 4);
+
+            this.width = w.get();
+            this.height = h.get();
+
+            // Create a new OpenGL texture
+            this.id = glGenTextures();
+
+            // Bind the texture
+            glBindTexture(GL_TEXTURE_2D, this.id);
+
+            // Tell OpenGL how to unpack the RGBA bytes. Each component is 1 byte size
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+            // Upload the texture data
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this.width, this.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, decodedImage);
+
+            // Generate Mip Map
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+    }
+}
+*/

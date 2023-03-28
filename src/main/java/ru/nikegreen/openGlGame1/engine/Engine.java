@@ -155,7 +155,7 @@ public class Engine {
             //рисуем в буфере
             //glBindVertexArray(vaoId);
             vertexArrayObj.bind();
-            glActiveTexture(GL_TEXTURE0); // Активируем текстурный блок перед привязкой текстуры
+            //glActiveTexture(GL_TEXTURE0); // Активируем текстурный блок перед привязкой текстуры
             texture.bind();
             shader.bind();
             shader.setUniformFromVec4f("u_Colour", colour);

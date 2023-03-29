@@ -8,6 +8,7 @@ import ru.nikegreen.openGlGame1.renderer.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45C.glCreateBuffers;
 import static org.lwjgl.opengl.GL45C.glCreateVertexArrays;
@@ -23,6 +24,7 @@ public class Engine {
     public static final int WIDTH = 640;
     public static final int HEIGHT = 360;
     public static final String TITLE = "Open GL window";
+    private static final float Z_STEP = 0.02f;
 
     /**
      * работа с окном OpenGL
@@ -33,8 +35,8 @@ public class Engine {
     /**
      * обработка событий клавиатуры
      */
-    @Getter
-    private Keyboard keyboard;
+    //@Getter
+    //private Keyboard keyboard;
 
     /**
      * Обработка событий мыши
@@ -74,10 +76,11 @@ public class Engine {
      */
     public void init() {
         engineWindow = new EngineWindow(WIDTH, HEIGHT, TITLE);
+        //engineWindow.setFullscreen(true);
         engineWindow.create();
         RenderEngine.init(engineWindow);
         gameObjects = new ArrayList<>();
-        keyboard = new Keyboard(engineWindow);
+        //keyboard = new Keyboard(engineWindow);
         mouse = new Mouse(engineWindow);
         shader = new Shader(
                 separatorNormalizer("shaders/Rectangle.vert"),
@@ -213,9 +216,32 @@ public class Engine {
         RenderEngine.getCamera().calculate();
 
         while (!engineWindow.isCloseRequest()) {
-
+            if (Keyboard.keyPressed(GLFW_KEY_KP_8)) {
+                RenderEngine.getCamera().getPosition().z += Z_STEP;
+                RenderEngine.getCamera().calculate();
+            }
+            if (Keyboard.keyPressed(GLFW_KEY_KP_5)) {
+                RenderEngine.getCamera().getPosition().z -= Z_STEP;
+                RenderEngine.getCamera().calculate();
+            }
+            if (Keyboard.keyPressed(GLFW_KEY_KP_4)) {
+                RenderEngine.getCamera().getPosition().x += Z_STEP;
+                RenderEngine.getCamera().calculate();
+            }
+            if (Keyboard.keyPressed(GLFW_KEY_KP_6)) {
+                RenderEngine.getCamera().getPosition().x -= Z_STEP;
+                RenderEngine.getCamera().calculate();
+            }
+            if (Keyboard.keyPressed(GLFW_KEY_KP_ENTER)) {
+                RenderEngine.getCamera().getPosition().y += Z_STEP;
+                RenderEngine.getCamera().calculate();
+            }
+            if (Keyboard.keyPressed(GLFW_KEY_KP_ADD)) {
+                RenderEngine.getCamera().getPosition().y -= Z_STEP;
+                RenderEngine.getCamera().calculate();
+            }
             //проверка кнопок
-            keyboard.handleKeyboardInput();
+            Keyboard.handleKeyboardInput();
             //mouse
             mouse.handleMouseInput();
             //движение
@@ -237,6 +263,7 @@ public class Engine {
             //обновляем окно
             engineWindow.swapBuffers();
         }
+        //цикл рисования окончен
         RenderEngine.destroy();
         //удаляем игровые объекты
         for (GameObject obj: gameObjects) {

@@ -1,7 +1,10 @@
 package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.joml.Matrix4f;
+import org.joml.Vector2i;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL33;
@@ -10,7 +13,6 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -24,6 +26,10 @@ public class EngineWindow {
     private static final float Z_NEAR = 0.01f;
     private static final float Z_FAR = 100.0f;
 
+    //окно полноэкранное? true - да
+    @Getter
+    @Setter
+    private boolean isFullscreen;
     //размеры OpenGL окна
     @Getter
     private int width; //ширина окна
@@ -36,9 +42,9 @@ public class EngineWindow {
     private IntBuffer pWidth;
     private IntBuffer pHeight;
     private GLFWVidMode vidmode;
-//    @Getter
-//    private Keyboard keyboard;
-    private final boolean[] keys = new boolean[GLFW_KEY_LAST];
+    @Getter
+    private Keyboard keyboard;
+    //private final boolean[] keys = new boolean[GLFW_KEY_LAST];
 
     private Matrix4f projectionMatrix;
 
@@ -89,8 +95,21 @@ public class EngineWindow {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
+        // Get the resolution of the primary monitor
+        vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        if (isFullscreen) {
+            window = glfwCreateWindow(
+                    vidmode.width(),
+                    vidmode.height(),
+                    title,
+                    GLFW.glfwGetPrimaryMonitor(),
+                    window);
+
+        } else {
+            window = glfwCreateWindow(width, height, title,0, window);
+        }
         // Create the window OpenGL
-        window = glfwCreateWindow(width, height, title, NULL, NULL);
         if ( window == NULL ) {
             //окно не создано
             throw new RuntimeException("Failed to create the GLFW window");
@@ -103,17 +122,14 @@ public class EngineWindow {
             pHeight = stack.mallocInt(1); // int*
 
             // Get the window size passed to glfwCreateWindow
-            glfwGetWindowSize(window, pWidth, pHeight);
-
-            // Get the resolution of the primary monitor
-            vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            getWindowSize();
 
             //установим оглавление окна
             glfwSetWindowTitle(window, title);
             //установка размера окна
             glfwSetWindowSize(window, width, height);
-            //установка соотношения сторон
-            glfwSetWindowAspectRatio(window, width, height);
+
+            setAspectRatio(width, height);
 
             // Center the window
             glfwSetWindowPos(
@@ -122,6 +138,7 @@ public class EngineWindow {
                     (vidmode.height() - pHeight.get(0)) / 2
             );
             glfwSetWindowSizeLimits(window, width, height, 1980, 1200);
+            //glfwSetWindowSizeCallback(window, );
         } // the stack frame is popped automatically
 
         //Keyboard.setCallback(Keyboard.defCallback);
@@ -139,6 +156,26 @@ public class EngineWindow {
         glfwShowWindow(window);
 
         Mouse.setMouseCallbacks(window);
+    }
+
+    /**
+     * Установить AspectRatio
+     */
+    public void setAspectRatio(int width, int height) {
+        //установка соотношения сторон
+        glfwSetWindowAspectRatio(window, width, height);
+    }
+
+    /**
+     * Узнать размер окна
+     * x - ширина
+     * y - высота
+     * @return размер окна OpenGL в векторе
+     */
+    public Vector2i getWindowSize() {
+        // Get the window size passed to glfwCreateWindow
+        glfwGetWindowSize(window, pWidth, pHeight);
+        return new Vector2i(pWidth.get(0), pHeight.get(0));
     }
 
     /**
@@ -167,6 +204,6 @@ public class EngineWindow {
     }
 
     public boolean keyPressed(int key) {
-        return (key < GLFW_KEY_LAST) && keys[key];
+        return (key < GLFW_KEY_LAST) && Keyboard.keyPressed(key); //keys[key];
     }
 }

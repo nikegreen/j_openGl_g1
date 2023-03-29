@@ -10,15 +10,16 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
  */
 public class Keyboard {
     private static final boolean[] keys = new boolean[GLFW_KEY_LAST];
-    private final EngineWindow engineWindow;
+    private static final boolean[] keysLock = new boolean[GLFW_KEY_LAST];
+//    private final EngineWindow engineWindow;
 
     /**
      * Конструктор
      * @param engineWindow дескриптор окна OpenGL
      */
-    public Keyboard(EngineWindow engineWindow) {
-        this.engineWindow = engineWindow;
-    }
+//    public Keyboard(EngineWindow engineWindow) {
+//        this.engineWindow = engineWindow;
+//    }
 
     /**
      * Проверка клавиши в нажатом состоянии
@@ -27,8 +28,8 @@ public class Keyboard {
      * true  - нажата
      * false - не нажата
      */
-    public boolean keyPressed(int keyId) {
-        return engineWindow.keyPressed(keyId);
+    public static boolean keyPressed(int keyId) {
+        return (keyId < GLFW_KEY_LAST) && keys[keyId];
     }
 
     /**
@@ -38,8 +39,8 @@ public class Keyboard {
      * true  - нажата
      * false - не нажата
      */
-    public boolean keyDown(int keyId) {
-        return  keyPressed(keyId) && !keys[keyId];
+    public static boolean keyDown(int keyId) {
+        return  keyPressed(keyId) && !keysLock[keyId];
     }
 
     /**
@@ -49,17 +50,17 @@ public class Keyboard {
      * true  - не нажата
      * false - нажата
      */
-    public boolean keyUp(int keyId) {
-        return !keyPressed(keyId) && keys[keyId];
+    public static boolean keyUp(int keyId) {
+        return !keyPressed(keyId) && keysLock[keyId];
     }
 
     /**
      * Проверка и формирование событий кнопок
      * нужно циклически вызывать
      */
-    public void handleKeyboardInput() {
+    public static void handleKeyboardInput() {
         for (int i = 0; i < GLFW_KEY_LAST; i++) {
-            keys[i] = engineWindow.keyPressed(i);
+            keysLock[i] = keys[i];
         }
     }
 
@@ -85,9 +86,13 @@ public class Keyboard {
      * @param windowHandle дескриптор окна openGL
      */
     public static void setCallBackDefault(long windowHandle) {
+        System.out.println("set keyboard callback");
         glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
                 keys[key] = true;
+            }
+            if (action == GLFW_RELEASE) {
+                keys[key] = false;
             }
             if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
                 keys[key] = false;

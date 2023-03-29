@@ -1,9 +1,11 @@
 package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
+import org.joml.Vector2i;
 import ru.nikegreen.openGlGame1.object.GameObject;
 import ru.nikegreen.openGlGame1.renderer.*;
 
+import static org.lwjgl.glfw.GLFW.glfwSetWindowAspectRatio;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
@@ -19,6 +21,8 @@ public class RenderEngine {
     @Getter
     private static EngineWindow engineWindow;
 
+    private static Vector2i oldWindowSize = new Vector2i(0, 0);
+
     public static void init(EngineWindow window) {
         camera = new Camera();
         engineWindow = window;
@@ -28,6 +32,12 @@ public class RenderEngine {
     }
 
     public static void begin(Shader shader) {
+        Vector2i wSize = engineWindow.getWindowSize();
+        if (!oldWindowSize.equals(wSize)) {
+            glViewport(0,0, wSize.x, wSize.y);
+            oldWindowSize = wSize;
+            engineWindow.setAspectRatio(wSize.x, wSize.y);
+        }
         //стираем буффер
         glClearColor(0.01f, 0.01f, 0.01f, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

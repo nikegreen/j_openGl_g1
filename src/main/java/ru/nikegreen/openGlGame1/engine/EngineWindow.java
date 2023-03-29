@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL33;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
@@ -124,6 +126,7 @@ public class EngineWindow {
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
         createCapabilities();
+        GL33.glEnable(GL33.GL_DEPTH_TEST);
         // Enable v-sync
         glfwSwapInterval(1);
 

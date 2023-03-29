@@ -149,7 +149,7 @@ public class Engine {
                 .buildTexture(texture)
                 .buildIndexesSize(ibo_quad.length);
         gameObjects.add(gameObject2);
-        RenderEngine.getCamera().setPosition(20, 0, 0);
+        RenderEngine.getCamera().setPosition(0.0f, 0.5f, -0.5f);
         RenderEngine.getCamera().calculate();
 
         while (!engineWindow.isCloseRequest()) {

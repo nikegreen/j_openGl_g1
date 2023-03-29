@@ -4,7 +4,6 @@ import lombok.Getter;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL33;
 import org.lwjgl.system.MemoryStack;
 
@@ -20,6 +19,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * Класс окна канвас OpenGL
  */
 public class EngineWindow {
+    //60.0 градусов переводим в радианы
+    private static final float FOV = (float) Math.toRadians(60.0f);
+    private static final float Z_NEAR = 0.01f;
+    private static final float Z_FAR = 100.0f;
+
     //размеры OpenGL окна
     @Getter
     private int width; //ширина окна
@@ -48,12 +52,13 @@ public class EngineWindow {
         this.width = width;
         this.height = height;
         this.title = title;
-        this.projectionMatrix = new Matrix4f().perspective(
-                70.0f, // угол просмотра,
-                ((float)width)/((float) height),
-                0.1f, // отсечение передней плоскости
-                50.0f // отсечение дальней плоскости
-                );
+        float aspectRatio = (float) width / height;
+        this.projectionMatrix = new Matrix4f().identity()
+                .perspective(
+                FOV,
+                aspectRatio,
+                Z_NEAR,
+                Z_FAR);
     }
 
     /**

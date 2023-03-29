@@ -149,7 +149,7 @@ public class Engine {
                 .buildTexture(texture)
                 .buildIndexesSize(ibo_quad.length);
         gameObjects.add(gameObject2);
-        RenderEngine.getCamera().setPosition(0.0f, 0.5f, -0.5f);
+        RenderEngine.getCamera().setPosition(0.0f, 0.5f, 3.5f);
         RenderEngine.getCamera().calculate();
 
         while (!engineWindow.isCloseRequest()) {
@@ -160,8 +160,9 @@ public class Engine {
             mouse.handleMouseInput();
             //движение
             float speed = 0.01f;
+            float rotSpeed = 180.0f/1.5f*0.01f;
             gameObject.getPosition().x += speed;
-            gameObject.getRotation().x += speed;
+            gameObject.getRotation().x += rotSpeed;
             if (gameObject.getPosition().x >= 1.5f) {
                 gameObject.getPosition().x = -1.5f;
             }

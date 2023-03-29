@@ -93,10 +93,11 @@ public class Camera {
     }
 
     public void calculate() {
-        Matrix4f m = new Matrix4f().translate(position)
-                .rotate(rotation.x, new Vector3f(1, 0, 0))
-                .rotate(rotation.y, new Vector3f(0, 1, 0))
-                .rotate(rotation.z, new Vector3f(0, 0, 1));
+        Matrix4f m = new Matrix4f().identity()
+                .translate(position)
+                .rotateX((float) Math.toRadians(rotation.x))
+                .rotateY((float) Math.toRadians(rotation.y))
+                .rotateZ((float) Math.toRadians(rotation.z));
         setViewMatrix(m);
     }
 

@@ -6,7 +6,6 @@ in vec3 position;
 in vec4 colour;
 in vec2 textureCoord;
 
-uniform vec4 u_Colour;
 uniform sampler2D u_TextureSampler;
 
 void main() {

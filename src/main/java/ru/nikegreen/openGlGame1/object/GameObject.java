@@ -46,6 +46,8 @@ public class GameObject {
     @Setter
     protected Vector3f scale;
 
+    public Matrix4f modelMatrix;
+
     public GameObject(Vector3f position, Vector3f rotation, Vector3f scale) {
         this.position = new Vector3f(position);
         this.rotation = new Vector3f(rotation);
@@ -74,11 +76,11 @@ public class GameObject {
     }
 
     public Matrix4f getModelMatrix() {
-        return new Matrix4f()
+        return new Matrix4f().identity()
                 .translate(position)
-                .rotate(rotation.x, new Vector3f(1, 0, 0))
-                .rotate(rotation.y, new Vector3f(0, 1, 0))
-                .rotate(rotation.z, new Vector3f(0, 0, 1))
+                .rotateX( (float) Math.toRadians(rotation.x))
+                .rotateY( (float) Math.toRadians(rotation.y))
+                .rotateZ( (float) Math.toRadians(rotation.z))
                 .scale(scale);
     }
 }

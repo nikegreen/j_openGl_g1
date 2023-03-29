@@ -16,5 +16,5 @@ void main() {
     position = attrib_Position;
     colour = attrib_Colour;
     textureCoord = attrib_TextureCoord;
-    gl_Position = u_ViewMatrix * u_ModelMatrix * vec4(attrib_Position, 1.0f);
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * vec4(attrib_Position, 1.0f);
 }

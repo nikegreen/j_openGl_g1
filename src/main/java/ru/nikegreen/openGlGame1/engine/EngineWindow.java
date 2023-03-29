@@ -1,6 +1,7 @@
 package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
@@ -33,6 +34,8 @@ public class EngineWindow {
 //    private Keyboard keyboard;
     private final boolean[] keys = new boolean[GLFW_KEY_LAST];
 
+    private Matrix4f projectionMatrix;
+
     /**
      * конструктор
      * @param width ширина окна тип int
@@ -43,6 +46,20 @@ public class EngineWindow {
         this.width = width;
         this.height = height;
         this.title = title;
+        this.projectionMatrix = new Matrix4f().perspective(
+                70.0f, // угол просмотра,
+                ((float)width)/((float) height),
+                0.1f, // отсечение передней плоскости
+                50.0f // отсечение дальней плоскости
+                );
+    }
+
+    /**
+     *
+     * @return матрицу проекции
+     */
+    public Matrix4f getProjectionMatrix() {
+        return projectionMatrix;
     }
 
     /**

@@ -2,7 +2,6 @@ package ru.nikegreen.openGlGame1.engine;
 
 import lombok.Getter;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import ru.nikegreen.openGlGame1.object.GameObject;
 import ru.nikegreen.openGlGame1.renderer.*;
 
@@ -76,7 +75,7 @@ public class Engine {
     public void init() {
         engineWindow = new EngineWindow(WIDTH, HEIGHT, TITLE);
         engineWindow.create();
-        RenderEngine.init();
+        RenderEngine.init(engineWindow);
         gameObjects = new ArrayList<>();
         keyboard = new Keyboard(engineWindow);
         mouse = new Mouse(engineWindow);
@@ -109,7 +108,7 @@ public class Engine {
 
         //вершины (x,y,z) + цвета (rgba) + коорд.текстур(x,y) против часовой стрелки
         float[] veritces = {
-                //вершины (x,   y,    z) + цвета (red  green blue  alpha) коорд.текстур
+        //вершины (x,   y,    z) + цвета (red  green blue  alpha) коорд.текстур
                 0.5f, 0.5f, 0.0f,        1.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
                 -0.5f, 0.5f, 0.0f,       0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f,
                 -0.5f, -0.5f, 0.0f,      1.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f,
@@ -117,7 +116,7 @@ public class Engine {
         };
 
         VertexArrayObj vertexArrayObj = new VertexArrayObj();
-        VertexBufferObject vertexBufferObj = new VertexBufferObject(veritces);
+        VertexBufferObj vertexBufferObj = new VertexBufferObj(veritces);
         vertexBufferObj.setLayout(
                 new BufferLayout(
                         new VertexAttribute("attrib_Position", VertexAttribute.ShaderDataType.t_float3),
@@ -129,15 +128,16 @@ public class Engine {
         IndexBufferObj indexBufferObj = new IndexBufferObj(ibo_quad);
         vertexArrayObj.putBuffer(indexBufferObj);
 
-        Vector4f colour = new Vector4f(0,0,0, 1);
+        //Vector4f colour = new Vector4f(0,0,0, 1);
 
         GameObject gameObject = new GameObject(
-                new Vector3f(-1.5f,0,0),
+                new Vector3f(-1.5f,0,0), //координаты объекта x,y,z
                 new Vector3f(0,0,0),
                 new Vector3f(1,1,1)
         );
-        gameObject.setModel(vertexArrayObj);
-        gameObject.setTexture(texture);
+        gameObject.buildModel(vertexArrayObj) // vertexArrayObj буфер с вершинами и индексами
+                .buildTexture(texture)
+                .buildIndexesSize(ibo_quad.length);
         gameObjects.add(gameObject);
 
         GameObject gameObject2 = new GameObject(
@@ -145,9 +145,12 @@ public class Engine {
                 new Vector3f(0,0,0),
                 new Vector3f(1,1,1)
         );
-        gameObject2.setModel(vertexArrayObj);
-        gameObject2.setTexture(texture);
+        gameObject2.buildModel(vertexArrayObj)
+                .buildTexture(texture)
+                .buildIndexesSize(ibo_quad.length);
         gameObjects.add(gameObject2);
+        RenderEngine.getCamera().setPosition(20, 0, 0);
+        RenderEngine.getCamera().calculate();
 
         while (!engineWindow.isCloseRequest()) {
 

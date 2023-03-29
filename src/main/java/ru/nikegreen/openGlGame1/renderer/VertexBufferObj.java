@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL45C.glCreateBuffers;
 import static org.lwjgl.opengles.GLES20.GL_STATIC_DRAW;
 
-public class VertexBufferObject {
+public class VertexBufferObj {
     @Getter
     private int id;
     @Getter
@@ -18,7 +18,7 @@ public class VertexBufferObject {
     @Getter
     private BufferLayout layout;
 
-    public VertexBufferObject(float[] data) {
+    public VertexBufferObj(float[] data) {
         this.data = data;
         this.usage = GL_STATIC_DRAW;
         this.create();

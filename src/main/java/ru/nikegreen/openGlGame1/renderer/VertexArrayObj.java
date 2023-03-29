@@ -13,7 +13,7 @@ public class VertexArrayObj {
     private int id;
 
     @Getter
-    private List<VertexBufferObject> vbos = new ArrayList<>();
+    private List<VertexBufferObj> vbos = new ArrayList<>();
 
     @Getter
     private List<IndexBufferObj> ibos = new ArrayList<>();
@@ -42,9 +42,9 @@ public class VertexArrayObj {
         glBindVertexArray(0);
     }
 
-    public void putBuffer(VertexBufferObject vertexBufferObject) {
-        int attributeId = vertexBufferObject.getLayout().prepareBuffer(0);
-        vbos.add(vertexBufferObject);
+    public void putBuffer(VertexBufferObj vertexBufferObj) {
+        int attributeId = vertexBufferObj.getLayout().prepareBuffer(0);
+        vbos.add(vertexBufferObj);
     }
 
     public void putBuffer(IndexBufferObj indexBufferObj) {

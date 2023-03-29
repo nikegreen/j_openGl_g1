@@ -1,5 +1,6 @@
 package ru.nikegreen.openGlGame1.engine;
 
+import lombok.Getter;
 import ru.nikegreen.openGlGame1.object.GameObject;
 import ru.nikegreen.openGlGame1.renderer.*;
 
@@ -12,7 +13,15 @@ import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderEngine {
-    public static void init() {
+    @Getter
+    private static Camera camera;
+
+    @Getter
+    private static EngineWindow engineWindow;
+
+    public static void init(EngineWindow window) {
+        camera = new Camera();
+        engineWindow = window;
         ///////////////////////////////////////////////////////
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -38,9 +47,11 @@ public class RenderEngine {
                 gameObject.getVertexArray().bind();
                 shader.bind();
                 shader.setUniformFromMat4f("u_ModelMatrix", gameObject.getModelMatrix());
+                shader.setUniformFromMat4f("u_ViewMatrix", camera.getViewMatrix());
+                shader.setUniformFromMat4f("u_ProjectionMatrix", engineWindow.getProjectionMatrix());
                 //рисуем в буфере
                 //glActiveTexture(GL_TEXTURE0); // Активируем текстурный блок перед привязкой текстуры
-                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);// to do 6 заменить на ???
+                glDrawElements(GL_TRIANGLES, gameObject.getIndexesSize(), GL_UNSIGNED_INT, 0);// to do 6 заменить на ???
                 //glDrawElements(GL_TRIANGLES, ibo_quad.length, GL_UNSIGNED_INT, 0);
                 shader.unBind();
                 gameObject.getVertexArray().unBind();

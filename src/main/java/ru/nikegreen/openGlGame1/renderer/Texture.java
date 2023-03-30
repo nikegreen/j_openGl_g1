@@ -159,7 +159,7 @@ public class Texture {
      */
     public BufferedImage loadImage(String loc) {
         try {
-            return ImageIO.read(getClass().getClassLoader().getResource(loc));
+            return ImageIO.read(getClass().getClassLoader().getResourceAsStream(loc));
         } catch (IOException e) {
             //Error Handling Here
         }

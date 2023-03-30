@@ -7,6 +7,8 @@ import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL33;
 import org.lwjgl.system.MemoryStack;
 
@@ -47,6 +49,8 @@ public class EngineWindow {
     //private final boolean[] keys = new boolean[GLFW_KEY_LAST];
 
     private Matrix4f projectionMatrix;
+
+    private GLFWWindowSizeCallback windowSize;
 
     /**
      * конструктор
@@ -185,6 +189,25 @@ public class EngineWindow {
     public void swapBuffers() {
         glfwPollEvents();
         glfwSwapBuffers(window);
+    }
+
+    /**
+     * каллбэк изменения размера окна openGL
+     */
+    public void setWindowSizeCallbackDef() {
+        GLFW.glfwSetWindowSizeCallback(window, this.windowSize = new GLFWWindowSizeCallback(){
+            @Override
+            public void invoke(long window, int width, int height) {
+//                Boot.window.height = height;
+//                Boot.window.width = width;
+//                Boot.window.aspectRatio = width/height;
+//                GL11.glViewport(0, 0, Boot.window.width, Boot.window.height);
+//                this.height = height;
+//                this.width = width;
+                //this.aspectRatio = width/height;
+                GL11.glViewport(0, 0, width, height);
+            }
+        });
     }
 
     /**

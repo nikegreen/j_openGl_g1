@@ -94,6 +94,9 @@ public class Shader {
         StringBuilder shaderSource = new StringBuilder();
         try {
             InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
+            if (in == null) {
+                System.out.println("Error read resource:" + fileName);
+            }
             InputStreamReader inputStreamReader = new InputStreamReader(in);
             BufferedReader reader = new BufferedReader(inputStreamReader);
             String line;

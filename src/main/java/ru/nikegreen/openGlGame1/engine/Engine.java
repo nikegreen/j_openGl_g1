@@ -83,8 +83,8 @@ public class Engine {
         //keyboard = new Keyboard(engineWindow);
         mouse = new Mouse(engineWindow);
         shader = new Shader(
-                separatorNormalizer("shaders/Rectangle.vert"),
-                separatorNormalizer("shaders/Rectangle.frag")
+                separatorNormalizer("shaders/rectangle.vert"),
+                separatorNormalizer("shaders/rectangle.frag")
         );
         //texture = new Texture("textures/texture1.png");
         texture = new Texture("textures/texture2.jpg");

@@ -13,7 +13,20 @@ import ru.nikegreen.openGlGame1.Main;
 import static org.lwjgl.opengl.GL11.*;
 public class TextureLoader {
     public static int loadTexture(BufferedImage image) {
+        if (image == null) {
+            throw new IllegalArgumentException(
+                    "Ошибка графического файла! Нет данных.");
+        }
         final int BYTES_PER_PIXEL = image.getColorModel().getPixelSize() / 8; //4;//3 for RGB, 4 for RGBA
+
+        if ((BYTES_PER_PIXEL < 3) || (BYTES_PER_PIXEL > 4)) {
+            throw new IllegalArgumentException(
+                    "Ошибка формата графического файла! Байтов на пиксель:" + BYTES_PER_PIXEL);
+        }
+        System.out.println("w:" + image.getWidth()
+                + " h:" + image.getHeight()
+                + " size:" + image.getData().getNumDataElements()
+        );
 
         int[] pixels = new int[image.getWidth() * image.getHeight()];
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());

@@ -129,7 +129,7 @@ public class EngineWindow {
             //установка размера окна
             glfwSetWindowSize(window, width, height);
 
-            setAspectRatio(width, height);
+            this.setAspectRatio(width, height);
 
             // Center the window
             glfwSetWindowPos(
@@ -138,23 +138,24 @@ public class EngineWindow {
                     (vidmode.height() - pHeight.get(0)) / 2
             );
             glfwSetWindowSizeLimits(window, width, height, 1980, 1200);
-            //glfwSetWindowSizeCallback(window, );
+            //glfwSetWindowSizeCallback(window, ....);
         } // the stack frame is popped automatically
 
+        //устанавливаем на окно обработчик клавиатуры
         //Keyboard.setCallback(Keyboard.defCallback);
         Keyboard.setCallBackDefault(window);
 
-
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
+        //подключаю буфер глубины
         createCapabilities();
         GL33.glEnable(GL33.GL_DEPTH_TEST);
-        // Enable v-sync
+        // Enable v-sync вертикальная синхронизация кадров
         glfwSwapInterval(1);
 
         // Make the window visible
         glfwShowWindow(window);
-
+        //устанавливаем на окно обработчик мыши
         Mouse.setMouseCallbacks(window);
     }
 
@@ -203,6 +204,13 @@ public class EngineWindow {
         return  glfwWindowShouldClose(window);
     }
 
+    /**
+     * если кнопка нажата и не отпущена в данный момент времени
+     * @param key - код кнопки которую нажали
+     * @return тип boolean
+     * true  - нажата
+     * false - не нажата
+     */
     public boolean keyPressed(int key) {
         return (key < GLFW_KEY_LAST) && Keyboard.keyPressed(key); //keys[key];
     }

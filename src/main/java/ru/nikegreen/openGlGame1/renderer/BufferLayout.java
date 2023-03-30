@@ -22,7 +22,10 @@ public class BufferLayout {
 
     public BufferLayout(VertexAttribute... attributes) {
         this.attributes = new ArrayList<>();
-        this.attributes.addAll(Arrays.stream(attributes).toList());
+        for (VertexAttribute va: attributes) {
+            this.attributes.add(va);
+        }
+        //this.attributes.addAll(Arrays.stream(attributes).toList()); // new version java
         calcOffsetAndStride();
     }
 

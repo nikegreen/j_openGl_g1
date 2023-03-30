@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL33C;
 
 
 import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -131,7 +132,14 @@ public class Texture {
         String resource1 = separatorNormalizer(resource);
         try {
             InputStream in = getClass().getClassLoader().getResourceAsStream(resource1);
-            byte[] bytes = in.readAllBytes();
+            ByteArrayOutputStream buffer1 = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[16384];
+            while ((nRead = in.read(data, 0, data.length)) != -1) {
+                buffer1.write(data, 0, nRead);
+            }
+            byte[] bytes = buffer1.toByteArray();
+            //byte[] bytes = in.readAllBytes(); //for java new version
             byte[] bytes1 = new byte[bytes.length + 1];
             bytes1[bytes.length] = 0;
             buffer = ByteBuffer.wrap(bytes1);

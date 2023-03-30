@@ -23,6 +23,10 @@ public class RenderEngine {
 
     private static Vector2i oldWindowSize = new Vector2i(0, 0);
 
+    /**
+     * Подготавливаем окно к отрисовке шейдера
+     * @param window класс окна openGL
+     */
     public static void init(EngineWindow window) {
         camera = new Camera();
         engineWindow = window;
@@ -31,12 +35,17 @@ public class RenderEngine {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    /**
+     * Подготовка к отрисовке внутри цикла рендера
+     * проверяем изменение размера окна
+     * @param shader шейдер
+     */
     public static void begin(Shader shader) {
         Vector2i wSize = engineWindow.getWindowSize();
         if (!oldWindowSize.equals(wSize)) {
-            glViewport(0,0, wSize.x, wSize.y);
             oldWindowSize = wSize;
-            engineWindow.setAspectRatio(wSize.x, wSize.y);
+            //engineWindow.setAspectRatio(wSize.x, wSize.y);
+            glViewport(0,0, wSize.x, wSize.y);
         }
         //стираем буффер
         glClearColor(0.01f, 0.01f, 0.01f, 1);
@@ -44,10 +53,19 @@ public class RenderEngine {
         shader.bind();
     }
 
+    /**
+     * заканчиваем отрисовку шейдера в цикле рендера
+     * @param shader класс шейдера
+     */
     public static void end(Shader shader) {
         shader.unBind();
     }
 
+    /**
+     * Отрисовка одного объекта
+     * @param shader класс шейдера
+     * @param gameObject класс объекта
+     */
     public static void renderGameObj(Shader shader, GameObject gameObject) {
         if (gameObject != null) {
             if (gameObject.getVertexArray() != null) {
@@ -72,6 +90,9 @@ public class RenderEngine {
         }
     }
 
+    /**
+     * освобождаем ресурсы
+     */
     public static void destroy() {
         glDisable(GL_BLEND);
     }

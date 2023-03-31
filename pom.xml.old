@@ -10,91 +10,24 @@
 	<name>openGlGame1</name>
 	<properties>
 		<lwjgl.version>3.3.1</lwjgl.version>
+		<lwjgl.natives>natives-windows</lwjgl.natives>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>ru.nikegreen.openGlGame1.Main</mainClass>
-
-		<joml.version>1.10.5</joml.version>
-		<lwjgl3-awt.version>0.1.8</lwjgl3-awt.version>
-		<steamworks4j.version>1.9.0</steamworks4j.version>
-		<steamworks4j-server.version>1.9.0</steamworks4j-server.version>
 	</properties>
 
-	<profiles>
-		<profile>
-			<id>lwjgl-natives-linux-amd64</id>
-			<activation>
-				<os>
-					<family>unix</family>
-					<arch>amd64</arch>
-				</os>
-			</activation>
-			<properties>
-				<lwjgl.natives>natives-linux</lwjgl.natives>
-			</properties>
-		</profile>
-		<profile>
-			<id>lwjgl-natives-linux-aarch64</id>
-			<activation>
-				<os>
-					<family>unix</family>
-					<arch>aarch64</arch>
-				</os>
-			</activation>
-			<properties>
-				<lwjgl.natives>natives-linux-arm64</lwjgl.natives>
-			</properties>
-		</profile>
-		<profile>
-			<id>lwjgl-natives-linux-arm</id>
-			<activation>
-				<os>
-					<family>unix</family>
-					<arch>arm</arch>
-				</os>
-			</activation>
-			<properties>
-				<lwjgl.natives>natives-linux-arm32</lwjgl.natives>
-			</properties>
-		</profile>
-		<profile>
-			<id>lwjgl-natives-linux-arm32</id>
-			<activation>
-				<os>
-					<family>unix</family>
-					<arch>arm32</arch>
-				</os>
-			</activation>
-			<properties>
-				<lwjgl.natives>natives-linux-arm32</lwjgl.natives>
-			</properties>
-		</profile>
-		<profile>
-			<id>lwjgl-natives-windows-amd64</id>
-			<activation>
-				<os>
-					<family>windows</family>
-					<arch>amd64</arch>
-				</os>
-			</activation>
-			<properties>
-				<lwjgl.natives>natives-windows</lwjgl.natives>
-			</properties>
-		</profile>
-	</profiles>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.lwjgl</groupId>
-				<artifactId>lwjgl-bom</artifactId>
-				<version>${lwjgl.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-bom</artifactId>
+			<version>${lwjgl.version}</version>
+			<scope>import</scope>
+			<type>pom</type>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
 
 <dependencies>
 	<dependency>
@@ -437,27 +370,6 @@
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
 	<dependency>
-		<groupId>org.joml</groupId>
-		<artifactId>joml</artifactId>
-		<version>${joml.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>org.lwjglx</groupId>
-		<artifactId>lwjgl3-awt</artifactId>
-		<version>${lwjgl3-awt.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>com.code-disaster.steamworks4j</groupId>
-		<artifactId>steamworks4j</artifactId>
-		<version>${steamworks4j.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>com.code-disaster.steamworks4j</groupId>
-		<artifactId>steamworks4j-server</artifactId>
-		<version>${steamworks4j-server.version}</version>
-	</dependency>
-
-	<dependency>
 		<groupId>org.projectlombok</groupId>
 		<artifactId>lombok</artifactId>
 		<version>1.18.22</version>
@@ -470,11 +382,11 @@
 <!--		<version>1.0.0</version>-->
 <!--	</dependency>-->
 	<!-- https://mvnrepository.com/artifact/org.joml/joml-jdk8 -->
-<!--	<dependency>-->
-<!--		<groupId>org.joml</groupId>-->
-<!--		<artifactId>joml-jdk8</artifactId>-->
-<!--		<version>1.10.1</version>-->
-<!--	</dependency>-->
+	<dependency>
+		<groupId>org.joml</groupId>
+		<artifactId>joml-jdk8</artifactId>
+		<version>1.10.1</version>
+	</dependency>
 
 <!--	<dependency>-->
 <!--			<groupId>org.jsoup</groupId>-->
